@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "axios": "^1.7.7",
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "graphql": "^16.9.0",
+    "graphql-http": "^1.22.1",
+    "morgan": "^1.10.0",
+    "uuid": "^11.0.2"
+  },
+  "name": "srvc2_order",
+  "version": "1.0.0",
+  "main": "ordersService.js",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  },
+  "scripts": {
+    "dev": "nodemon ordersService",
+    "start": "node ordersService"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "module",
+  "license": "ISC",
+  "description": ""
+}
