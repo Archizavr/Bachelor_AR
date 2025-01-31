@@ -1,0 +1,18 @@
+{
+  "name": "e2e_test",
+  "version": "1.0.0",
+  "main": "tester.js",
+  "scripts": {
+    "start": "node tester_rest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "newman": "^6.2.1"
+  },
+  "devDependencies": {
+    "newman-reporter-htmlextra": "^1.23.1"
+  }
+}
