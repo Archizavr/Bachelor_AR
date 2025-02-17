@@ -3,7 +3,7 @@ import morgan from 'morgan';
 // import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
-const PORT = 4001;
+const PORT = process.env.PORT || 4001;
 
 // Lietotāju datu inicializācija
 const users = [
@@ -14,6 +14,10 @@ const users = [
 // Starpprogrammatūras morgan konfigurēšana pieprasījumu reģistrēšanai
 app.use(morgan('dev')); 
 app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.json({Status: "OK", Message:"User service"});
+});
 
 // Darbības loģika, lai strādātu ar lietotājiem
 app.get('/users', (req, res) => {
@@ -33,8 +37,9 @@ app.post('/users', (req, res) => {
     if (!name || !email) {
         return res.status(400).json({ error: 'Name and email are required' });
     }
-
-    const newUser = { id: users.length + 1, name, email };
+    const userId = users.length + 1;
+    const newUser = { id: userId.toString(), name, email };
+    // const newUser = { id: users.length + 1, name, email };
     users.push(newUser);
     res.json(newUser);
 });

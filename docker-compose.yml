@@ -1,0 +1,60 @@
+services:
+  srvc1_user:
+    build:
+      context: ./srvc1_user
+    image: srvc1_user:latest
+    container_name: service_users
+    expose:
+      - "3000"
+    ports:
+      - "5001:${SRVC_USR_PORT}"
+    environment:
+      - NODE_ENV=development
+      - PORT=${SRVC_USR_PORT}
+
+  srvc2_order:
+    build:
+      context: ./srvc2_order
+    image: srvc2_order:latest
+    container_name: service_orders
+    expose:
+      - "3000"
+    ports:
+      - "5002:${SRVC_ORD_PORT}"
+    environment:
+      - NODE_ENV=development
+      - PORT=${SRVC_ORD_PORT}
+
+  srvc3_prod:
+    build:
+      context: ./srvc3_prod
+    image: srvc3_prod:latest
+    container_name: service_product
+    expose:
+      - "3000"
+    ports:
+      - "5003:${SRVC_PROD_PORT}"
+    environment:
+      - NODE_ENV=development
+      - PORT=${SRVC_PROD_PORT}
+    
+  api_gateway:
+    build:
+      context: ./api_gateway
+    image: api_gateway:latest
+    container_name: api_gateway
+    ports:
+      - "5000:${GATEWAY_PORT}"
+    environment:
+      - NODE_ENV=production
+      - GATEWAY_PORT=${GATEWAY_PORT}
+      - SRVC_USER_NAME=srvc1_user
+      - SRVC_USER_PORT=${SRVC_USR_PORT}
+      - SRVC_ORDER_NAME=srvc2_order
+      - SRVC_ORDER_PORT=${SRVC_ORD_PORT}
+      - SRVC_PRODUCT_NAME=srvc3_prod
+      - SRVC_PRODUCT_PORT=${SRVC_PROD_PORT}
+    depends_on:
+      - srvc1_user
+      - srvc2_order
+      - srvc3_prod

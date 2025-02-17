@@ -1,0 +1,138 @@
+{
+	"info": {
+		"_postman_id": "f01b83fb-4553-4cbf-bb4e-6d15af9e74fc",
+		"name": "01_New_order_2_prod_GQL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "41708234"
+	},
+	"item": [
+		{
+			"name": "Create user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"query\": \"mutation CreateUser($name: String!, $email: String!) { createUser(name: $name, email: $email) { id name email } }\",\n  \"variables\": {\n    \"name\": \"John\",\n    \"email\": \"john@example.com\"\n  }\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{ServerApollo}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Get user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"query\": \"query GetUser($getUserId: ID!) {  getUser(id: $getUserId) { id  email   name }}\",\n  \"variables\": {    \n    \"getUserId\": {{user_id}}\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{ServerApollo}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Create order",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"query\": \"mutation CreateOrder($userId: ID!, $products: [String!]!, $amount: Float!) { createOrder(userId: $userId, products: $products, amount: $amount) { id userId products amount } }\",\n  \"variables\": {\n    \"userId\": {{user_id}},\n    \"products\": [\"1\",\"2\"],\n    \"amount\": 120.50\n  }\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{ServerApollo}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Get user orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"query\": \"query GetOrders($userId: ID!) {  getOrders(userId: $userId) { id userId amount products }}\",\n  \"variables\": {    \n    \"userId\": {{user_id}}\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{ServerApollo}}"
+			},
+			"response": []
+		}
+	]
+}

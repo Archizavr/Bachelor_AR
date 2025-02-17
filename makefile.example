@@ -1,0 +1,44 @@
+start: start_db_all
+
+stop: stop_db_all
+
+start_db_all: start_db_auth start_adminer start_redis
+
+stop_db_all: stop_db_auth stop_adminer stop_redis
+
+# back:
+# 	docker run -d --name db_auth_post -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=pass1234 -e POSTGRES_DB=auth_db -p 5432:5432 -v $(PWD)/infra/db/data/auth_db/:/var/lib/postgresql/data postgres:latest
+# 	docker run -d --name adminer -p 8080:8080 -e ADMINER_DEFAULT_SERVER=localhost adminer
+
+start_db_auth:
+	docker network create db_net
+	docker run -d --name db_auth_post -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=pass1234 -e POSTGRES_DB=auth_db -p 5432:5432 --network db_net postgres:latest
+
+start_adminer:
+	docker run -d --name adminer -p 8080:8080 --network db_net adminer
+
+start_redis:
+	docker run -d --name redis_token -p 6379:6379 --network db_net redis
+
+rebuild:
+	docker rmi db_auth_post
+	docker build -t db_auth_post -f ./infra/db/config/Dockerfile .
+
+build:
+	docker build -t db_auth_post -f ./infra/db/config/Dockerfile .
+
+version:
+	docker -v
+
+stop_db_auth:
+	docker stop db_auth_post
+	docker rm db_auth_post
+
+stop_adminer:
+	docker stop adminer
+	docker rm adminer
+
+stop_redis:
+	docker stop redis_token
+	docker rm redis_token
+	docker network rm db_net

@@ -1,0 +1,19 @@
+# Ignore node_modules directory
+node_modules/
+
+# Ignore reports directory
+reports/
+
+# Ignore npm debug logs
+npm-debug.log
+
+# Ignore environment files (if any)
+.env
+
+# Ignore Docker-related files (optional)
+Dockerfile
+.dockerignore
+
+# Ignore Git files (optional)
+.git/
+.gitignore
