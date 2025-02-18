@@ -37,7 +37,8 @@ const typeDefs = `#graphql
     getUser(id: ID!): User
     getUsers: [User]
     getOrders(userId: ID): [Order]
-    getProduct: [Product]
+    getProduct(id: ID!): Product
+    getProducts: [Product]
   }
 
   type Mutation {
@@ -93,10 +94,14 @@ const resolvers = {
       return enrichedOrders;
     },
 
-    getProduct: async () => {
+    getProducts: async () => {
         const response = await axios.get(`http://${serverProductName}:${serverProductPort}/products`, {});
-        console.log('getProduct');
         return response.data;
+      },
+    getProduct: async (_, { id }) => {
+        // Saņēmam lietotāju no REST API
+        const productResponse = await axios.get(`http://${serverProductName}:${serverProductPort}/products/${id}`);
+        return productResponse.data;
       },
   },
   Mutation: {
