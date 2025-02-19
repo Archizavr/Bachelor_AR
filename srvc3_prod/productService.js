@@ -19,7 +19,6 @@ app.get('/products', (req, res) => {
 
 app.get('/products/:id', (req, res) => {
   const productId = req.params.id;
-  // Lietotāju saņemšana pēc ID
   const product = products.find(product => product.id === productId)
   res.json(product);
 });
