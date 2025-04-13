@@ -2,7 +2,7 @@ services:
   srvc1_user:
     build:
       context: ./srvc1_user
-    image: srvc1_user:latest
+    image: artezorro/srvc1_user:v1
     container_name: service_users
     expose:
       - "3000"
@@ -15,7 +15,7 @@ services:
   srvc2_order:
     build:
       context: ./srvc2_order
-    image: srvc2_order:latest
+    image: artezorro/srvc2_order:v1
     container_name: service_orders
     expose:
       - "3000"
@@ -28,7 +28,7 @@ services:
   srvc3_prod:
     build:
       context: ./srvc3_prod
-    image: srvc3_prod:latest
+    image: artezorro/srvc3_prod:v1
     container_name: service_product
     expose:
       - "3000"
@@ -41,7 +41,7 @@ services:
   api_gateway:
     build:
       context: ./api_gateway
-    image: api_gateway:latest
+    image: artezorro/api_gateway:v1
     container_name: api_gateway
     ports:
       - "5000:${GATEWAY_PORT}"

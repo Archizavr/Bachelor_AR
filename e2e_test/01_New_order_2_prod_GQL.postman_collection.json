@@ -13,8 +13,14 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is 201\", function () {",
 							"    pm.response.to.have.status(200);",
+							"    const responseBody = pm.response.json();",
+							"    pm.expect(responseBody).to.be.an('object');",
+							"    pm.expect(responseBody).to.have.property('data');",
+							"    pm.expect(responseBody.data).to.have.property('createUser');",
+							"    pm.expect(responseBody.data.createUser).to.have.property('id');",
+							"    pm.environment.set(\"user_id\", responseBody.data.createUser.id);",
 							"});"
 						],
 						"type": "text/javascript",
@@ -77,8 +83,11 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Status code is 201\", function () {",
 							"    pm.response.to.have.status(200);",
+							"    const responseBody = pm.response.json();",
+							"    pm.expect(responseBody).to.be.an('object');",
+							"    pm.expect(responseBody).to.have.property('data');",
 							"});"
 						],
 						"type": "text/javascript",
@@ -91,7 +100,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"query\": \"mutation CreateOrder($userId: ID!, $products: [String!]!, $amount: Float!) { createOrder(userId: $userId, products: $products, amount: $amount) { id userId products amount } }\",\n  \"variables\": {\n    \"userId\": {{user_id}},\n    \"products\": [\"1\",\"2\"],\n    \"amount\": 120.50\n  }\n}\n",
+					"raw": "{\n  \"query\": \"mutation CreateOrder($userId: ID!, $products: [String!]!, $amount: Float!) { createOrder(userId: $userId, products: $products, amount: $amount) { id userId products { id productName } amount } }\",\n  \"variables\": {\n    \"userId\": {{user_id}},\n    \"products\": [],\n    \"amount\": 120.50\n  }\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -123,7 +132,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"query\": \"query GetOrders($userId: ID!) {  getOrders(userId: $userId) { id userId amount products }}\",\n  \"variables\": {    \n    \"userId\": {{user_id}}\n  }\n}",
+					"raw": "{\n  \"query\": \"query GetOrders($userId: ID!) {  getOrders(userId: $userId) { id userId amount products { id productName } }}\",\n  \"variables\": {    \n    \"userId\": {{user_id}}\n  }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -133,6 +142,28 @@
 				"url": "{{ServerApollo}}"
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }

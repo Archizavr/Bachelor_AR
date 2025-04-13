@@ -16,12 +16,17 @@ restart: stop ### Stop and re-build docker compose
 	docker compose up -d --build
 .PHONY: restart
 
+deploy: ### Push all images to docker repository
+	docker push artezorro/api_gateway:v1
+	docker push artezorro/srvc1_user:v1
+	docker push artezorro/srvc2_order:v1
+	docker push artezorro/srvc3_prod:v1
+.PHONY: deploy
+
 clear: stop ### Remove all created containers & images
 	docker image prune -f
 	docker image prune -a -f
 .PHONY: clear
-
-# # deploy:
 
 run_dev: ### Run all standalone NodeJS services
 	@node srvc1_user/usersService.js &
@@ -39,7 +44,7 @@ stop_dev: ### Stop all standalone NodeJS services
 	@echo "Services stopped."
 .PHONY: stop_dev
 
-restart_dev: stop_dev run_dev ###Stop all standalone NodeJS services and re-run it
+restart_dev: stop_dev run_dev ### Stop all standalone NodeJS services and re-run it
 .PHONY: stop_dev
 
 start_all_test_rest: # Execute all REST API tests
@@ -55,19 +60,40 @@ test_endp: start_all_test_rest start_all_test_gql ### Test all endpoints REST AP
 
 start_all_test_dev_rest: # Execute all REST API tests in dev mode
 	node e2e_test/test_collection.js ./00_Test_All_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html
-.PHONY: start_all_test_rest
+.PHONY: start_all_test_dev_rest
 
 start_all_test_dev_gql: # Execute all GraphQL tests in dev mode
 	node e2e_test/test_collection.js ./00_Test_All_GQL_POST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_GQL_dev.html
-.PHONY: start_all_test_gql
+.PHONY: start_all_test_dev_gql
 
 test_endp_dev: start_all_test_dev_rest start_all_test_dev_gql ### Test all endpoints REST API & GraphQL in dev mode
 .PHONY: test_endp_dev
 
-test_time_01: ### Test scenario 01: REST API & GraphQL
+start_all_test_azure_rest: # Execute all REST API tests in cloud mode
+	node e2e_test/test_collection.js ./00_Test_All_REST.postman_collection.json ./BachAzureTest.postman_environment.json ./reports/output_REST_azure.html
+.PHONY: start_all_test_azure_rest
+
+start_all_test_azure_gql: # Execute all GraphQL tests in cloud mode
+	node e2e_test/test_collection.js ./00_Test_All_GQL_POST.postman_collection.json ./BachAzureTest.postman_environment.json ./reports/output_GQL_azure.html
+.PHONY: start_all_test_azure_gql
+
+test_endp_azure: start_all_test_azure_rest start_all_test_azure_gql ### Test all endpoints REST API & GraphQL in cloud mode
+.PHONY: test_endp_azure
+
+test_time_01: ### Test scenario 01: REST API & GraphQL in test mode
 	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST01.html
 	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL01.html
 .PHONY: test_time_01
+
+test_time_01_dev: ### Test scenario 01: REST API & GraphQL in dev mode
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST01.html
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachDev.postman_environment.json ./reports/output_GQL01.html
+.PHONY: test_time_01_dev
+
+test_time_01_azure: ### Test scenario 01: REST API & GraphQL in cloud mode
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachAzureTest.postman_environment.json ./reports/output_REST01.html
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachAzureTest.postman_environment.json ./reports/output_GQL01.html
+.PHONY: test_time_01_azure
 
 test_time: test_time_01 ### Test all scenarios
 .PHONY: test_time
