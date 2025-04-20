@@ -26,6 +26,21 @@
 						"type": "text/javascript",
 						"packages": {}
 					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const uniqueName = `User_${Math.random().toString(36).substring(2, 8)}_${Date.now()}`;",
+							"",
+							"const uniqueEmail = `${uniqueName}@example.com`;",
+							"",
+							"pm.variables.set(\"uniqueName\", uniqueName);",
+							"pm.variables.set(\"uniqueEmail\", uniqueEmail);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
 				}
 			],
 			"request": {
@@ -33,7 +48,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"query\": \"mutation CreateUser($name: String!, $email: String!) { createUser(name: $name, email: $email) { id name email } }\",\n  \"variables\": {\n    \"name\": \"John\",\n    \"email\": \"john@example.com\"\n  }\n}\n",
+					"raw": "{\n  \"query\": \"mutation CreateUser($name: String!, $email: String!, $password: String!) { createUser(name: $name, email: $email, password: $password) { id name email } }\",\n  \"variables\": {\n    \"name\": \"{{uniqueName}}\",\n    \"email\": \"{{uniqueEmail}}\",\n    \"password\": \"abudabislezsverbluda\"\n  }\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -100,7 +115,42 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"query\": \"mutation CreateOrder($userId: ID!, $products: [String!]!, $amount: Float!) { createOrder(userId: $userId, products: $products, amount: $amount) { id userId products { id productName } amount } }\",\n  \"variables\": {\n    \"userId\": {{user_id}},\n    \"products\": [],\n    \"amount\": 120.50\n  }\n}\n",
+					"raw": "{\n  \"query\": \"mutation CreateOrder($userId: ID!, $products: [String!]!, $amount: Float!) { createOrder(userId: $userId, products: $products, amount: $amount) { id userid products { products { id name }} amount } }\",\n  \"variables\": {\n    \"userId\": {{user_id}},\n    \"products\": [],\n    \"amount\": 120.50\n  }\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{ServerApollo}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Add Product 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    const responseBody = pm.response.json();",
+							"    pm.expect(responseBody).to.be.an('object');",
+							"    pm.expect(responseBody).to.have.property('data');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"query\": \"mutation CreateOrder($userId: ID!, $products: [String!]!, $amount: Float!) { createOrder(userId: $userId, products: $products, amount: $amount) { id userid products { products { id name }} amount } }\",\n  \"variables\": {\n    \"userId\": {{user_id}},\n    \"products\": [\"1\",\"2\",\"3\"],\n    \"amount\": 325\n  }\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -132,7 +182,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"query\": \"query GetOrders($userId: ID!) {  getOrders(userId: $userId) { id userId amount products { id productName } }}\",\n  \"variables\": {    \n    \"userId\": {{user_id}}\n  }\n}",
+					"raw": "{\n  \"query\": \"query GetOrders($userId: ID!) {  getOrders(userId: $userId, limit: 99) { orders { id userid amount products { products { id name }} } pageInfo {hasNextPage} }}\",\n  \"variables\": {    \n    \"userId\": {{user_id}}\n  }\n}",
 					"options": {
 						"raw": {
 							"language": "json"

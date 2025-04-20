@@ -9,8 +9,16 @@ services:
     ports:
       - "5001:${SRVC_USR_PORT}"
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - PORT=${SRVC_USR_PORT}
+      - USER_PGHOST=${USER_PGHOST}
+      - USER_PGUSER=${USER_PGUSER}
+      - USER_PGPASSWORD=${USER_PGPASSWORD}
+      - USER_PGDATABASE=${USER_PGDATABASE}
+      # - USER_PGPORT=${USER_PGPORT}
+      - USER_PGPORT=5432
+    depends_on:
+      - db_user
 
   srvc2_order:
     build:
@@ -24,12 +32,19 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=${SRVC_ORD_PORT}
+      - ORDER_PGHOST=${ORDER_PGHOST}
+      - ORDER_PGUSER=${ORDER_PGUSER}
+      - ORDER_PGPASSWORD=${ORDER_PGPASSWORD}
+      - ORDER_PGDATABASE=${ORDER_PGDATABASE}
+      - ORDER_PGPORT=5432
+    depends_on:
+      - db_order
 
   srvc3_prod:
     build:
       context: ./srvc3_prod
     image: artezorro/srvc3_prod:v1
-    container_name: service_product
+    container_name: service_postgresproduct
     expose:
       - "3000"
     ports:
@@ -37,7 +52,14 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=${SRVC_PROD_PORT}
-    
+      - PRODUCT_PGHOST=${PRODUCT_PGHOST}
+      - PRODUCT_PGUSER=${PRODUCT_PGUSER}
+      - PRODUCT_PGPASSWORD=${PRODUCT_PGPASSWORD}
+      - PRODUCT_PGDATABASE=${PRODUCT_PGDATABASE}
+      - PRODUCT_PGPORT=5432
+    depends_on:
+      - db_product
+
   api_gateway:
     build:
       context: ./api_gateway
@@ -58,3 +80,52 @@ services:
       - srvc1_user
       - srvc2_order
       - srvc3_prod
+  db_user:
+    build:
+      context: ./srvc1_user/db
+    container_name: db_user
+    ports:
+      # - "5441:5432"
+      - "${USER_PGPORT}:5432"
+    environment:
+      POSTGRES_USER: ${USER_PGUSER}
+      POSTGRES_PASSWORD: ${USER_PGPASSWORD}
+      POSTGRES_DB: ${USER_PGDATABASE}
+    volumes:
+      - pgdata_user:/var/lib/postgresql/data
+
+  db_order:
+    build:
+      context: ./srvc2_order/db
+    container_name: db_order
+    ports:
+      - "${ORDER_PGPORT}:5432"
+    environment:
+      POSTGRES_USER: ${ORDER_PGUSER}
+      POSTGRES_PASSWORD: ${ORDER_PGPASSWORD}
+      POSTGRES_DB: ${ORDER_PGDATABASE}
+    volumes:
+      - pgdata_order:/var/lib/postgresql/data
+
+  db_product:
+    build:
+      context: ./srvc3_prod/db
+    container_name: db_product
+    ports:
+      - "${PRODUCT_PGPORT}:5432"
+    environment:
+      POSTGRES_USER: ${PRODUCT_PGUSER}
+      POSTGRES_PASSWORD: ${PRODUCT_PGPASSWORD}
+      POSTGRES_DB: ${PRODUCT_PGDATABASE}
+    volumes:
+      - pgdata_product:/var/lib/postgresql/data
+
+  adminer:
+      image: adminer
+      ports:
+        - 8080:8080
+
+volumes:
+  pgdata_user:
+  pgdata_order:
+  pgdata_product:

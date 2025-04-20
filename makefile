@@ -62,6 +62,10 @@ start_all_test_dev_rest: # Execute all REST API tests in dev mode
 	node e2e_test/test_collection.js ./00_Test_All_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html
 .PHONY: start_all_test_dev_rest
 
+start_all_test_dev_rest_10: ### Execute all REST API tests in dev mode 10 times
+	node e2e_test/test_collection.js ./00_Test_All_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html 10 ./reports/statistics_dev_10.csv
+.PHONY: start_all_test_dev_rest_10
+
 start_all_test_dev_gql: # Execute all GraphQL tests in dev mode
 	node e2e_test/test_collection.js ./00_Test_All_GQL_POST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_GQL_dev.html
 .PHONY: start_all_test_dev_gql

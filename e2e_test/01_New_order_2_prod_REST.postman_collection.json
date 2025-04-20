@@ -14,12 +14,31 @@
 					"script": {
 						"exec": [
 							"pm.test(\"User ID is present in response\", function () {",
-							"    pm.response.to.have.status(200);",
 							"    const responseBody = pm.response.json();",
+							"    ",
+							"    // console.log(responseBody);",
+							"",
 							"    pm.expect(responseBody).to.be.an('object'); // Check if it's an object",
 							"    pm.expect(responseBody).to.have.property('id'); // Check if 'id' property exists",
 							"    pm.environment.set(\"user_id\", responseBody.id);",
+							"",
+							"    pm.response.to.have.status(201);",
 							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const uniqueName = `User_${Math.random().toString(36).substring(2, 8)}_${Date.now()}`;",
+							"",
+							"const uniqueEmail = `${uniqueName}@example.com`;",
+							"",
+							"pm.variables.set(\"uniqueName\", uniqueName);",
+							"pm.variables.set(\"uniqueEmail\", uniqueEmail);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -31,7 +50,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": " {\n    \"name\": \"Daniel\",\n    \"email\": \"daniel@example.com\"\n}",
+					"raw": " {\n    \"name\": \"{{uniqueName}}\",\n    \"email\": \"{{uniqueEmail}}\",\n    \"password\": \"abudabislezsverbluda\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -86,6 +105,7 @@
 						"exec": [
 							"pm.test(\"User ID is present in response\", function () {",
 							"    pm.response.to.have.status(201);",
+							"",
 							"    const responseBody = pm.response.json();",
 							"    pm.expect(responseBody).to.be.an('object'); // Check if it's an object",
 							"    pm.expect(responseBody).to.have.property('id'); // Check if 'id' property exists",
@@ -115,6 +135,20 @@
 		},
 		{
 			"name": "Add product 1",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "PUT",
 				"header": [],
@@ -133,6 +167,20 @@
 		},
 		{
 			"name": "Add product 2",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "PUT",
 				"header": [],
@@ -165,9 +213,21 @@
 					}
 				}
 			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "{{ServerOrder}}/orders?userId={{user_id}}",
 					"host": [

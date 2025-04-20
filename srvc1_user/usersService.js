@@ -21,7 +21,7 @@ app.get('/', (req, res) => {
 
 // Darbības loģika, lai strādātu ar lietotājiem
 app.get('/users', (req, res) => {
-  res.json(users);
+  res.json(users);PORT
 });
 
 app.get('/users/:id', (req, res) => {

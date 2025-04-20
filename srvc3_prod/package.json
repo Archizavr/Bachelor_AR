@@ -1,10 +1,12 @@
 {
   "name": "srvc3_prod",
   "version": "1.0.0",
+  "type": "module",
   "main": "productService.js",
   "scripts": {
-    "dev": "nodemon productService.js",
-    "start": "node productService.js"
+    "dev_old": "nodemon productService.js",
+    "dev": "nodemon server",
+    "start": "node server"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +16,8 @@
     "nodemon": "^3.1.9"
   },
   "dependencies": {
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.14.1"
   }
 }

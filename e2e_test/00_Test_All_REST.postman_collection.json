@@ -13,13 +13,35 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    // console.log(\"Proverka\")",
 							"    const responseBody = pm.response.json();",
+							"    // console.log(responseBody)",
+							"    // console.log(typeof(responseBody))",
+							"    // console.log(responseBody.id)",
+							"",
 							"    pm.expect(responseBody).to.be.an('object');",
 							"    pm.expect(responseBody).to.have.property('id');",
 							"    pm.environment.set(\"user_id\", responseBody.id);",
-							"});"
+							"",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const uniqueName = `User_${Math.random().toString(36).substring(2, 8)}_${Date.now()}`;",
+							"",
+							"const uniqueEmail = `${uniqueName}@example.com`;",
+							"",
+							"pm.variables.set(\"uniqueName\", uniqueName);",
+							"pm.variables.set(\"uniqueEmail\", uniqueEmail);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -31,7 +53,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": " {\n        \"name\": \"Artem\",\n        \"email\": \"artemy@example.com\"\n    }",
+					"raw": " {\n    \"name\": \"{{uniqueName}}\",\n    \"email\": \"{{uniqueEmail}}\",\n    \"password\": \"abudabislezsverbluda\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -192,7 +214,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"product\": 1\n}",
+					"raw": "{\n  \"product\": 2\n}",
 					"options": {
 						"raw": {
 							"language": "json"
