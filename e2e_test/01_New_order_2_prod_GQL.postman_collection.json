@@ -108,37 +108,20 @@
 						"type": "text/javascript",
 						"packages": {}
 					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"query\": \"mutation CreateOrder($userId: ID!, $products: [String!]!, $amount: Float!) { createOrder(userId: $userId, products: $products, amount: $amount) { id userid products { products { id name }} amount } }\",\n  \"variables\": {\n    \"userId\": {{user_id}},\n    \"products\": [],\n    \"amount\": 120.50\n  }\n}\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
 				},
-				"url": "{{ServerApollo}}"
-			},
-			"response": []
-		},
-		{
-			"name": "Add Product 1",
-			"event": [
 				{
-					"listen": "test",
+					"listen": "prerequest",
 					"script": {
 						"exec": [
-							"pm.test(\"Status code is 201\", function () {",
-							"    pm.response.to.have.status(200);",
-							"    const responseBody = pm.response.json();",
-							"    pm.expect(responseBody).to.be.an('object');",
-							"    pm.expect(responseBody).to.have.property('data');",
-							"});"
+							"function getRandomNumber(min, max) {",
+							"    return Math.floor(Math.random() * (max - min + 1)) + min;",
+							"}",
+							"",
+							"const product1 = getRandomNumber(1, 20);",
+							"const product2 = getRandomNumber(1, 20);",
+							"",
+							"pm.variables.set(\"product1\", product1);",
+							"pm.variables.set(\"product2\", product2);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -150,7 +133,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"query\": \"mutation CreateOrder($userId: ID!, $products: [String!]!, $amount: Float!) { createOrder(userId: $userId, products: $products, amount: $amount) { id userid products { products { id name }} amount } }\",\n  \"variables\": {\n    \"userId\": {{user_id}},\n    \"products\": [\"1\",\"2\",\"3\"],\n    \"amount\": 325\n  }\n}\n",
+					"raw": "{\n  \"query\": \"mutation CreateOrder($userId: ID!, $products: [String!]!, $amount: Float!) { createOrder(userId: $userId, products: $products, amount: $amount) { id userid products { products { id name }} amount } }\",\n  \"variables\": {\n    \"userId\": {{user_id}},\n    \"products\": [\"{{product1}}\",\"{{product2}}\"],\n    \"amount\": 120.50\n  }\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"

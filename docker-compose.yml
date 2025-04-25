@@ -2,7 +2,7 @@ services:
   srvc1_user:
     build:
       context: ./srvc1_user
-    image: artezorro/srvc1_user:v1
+    image: artezorro/srvc1_user:v2
     container_name: service_users
     expose:
       - "3000"
@@ -23,7 +23,7 @@ services:
   srvc2_order:
     build:
       context: ./srvc2_order
-    image: artezorro/srvc2_order:v1
+    image: artezorro/srvc2_order:v2
     container_name: service_orders
     expose:
       - "3000"
@@ -43,8 +43,8 @@ services:
   srvc3_prod:
     build:
       context: ./srvc3_prod
-    image: artezorro/srvc3_prod:v1
-    container_name: service_postgresproduct
+    image: artezorro/srvc3_prod:v2
+    container_name: service_product
     expose:
       - "3000"
     ports:
@@ -63,7 +63,7 @@ services:
   api_gateway:
     build:
       context: ./api_gateway
-    image: artezorro/api_gateway:v1
+    image: artezorro/api_gateway:v2
     container_name: api_gateway
     ports:
       - "5000:${GATEWAY_PORT}"
@@ -84,6 +84,7 @@ services:
     build:
       context: ./srvc1_user/db
     container_name: db_user
+    image: artezorro/db_user:v2
     ports:
       # - "5441:5432"
       - "${USER_PGPORT}:5432"
@@ -98,6 +99,7 @@ services:
     build:
       context: ./srvc2_order/db
     container_name: db_order
+    image: artezorro/db_order:v2
     ports:
       - "${ORDER_PGPORT}:5432"
     environment:
@@ -111,6 +113,7 @@ services:
     build:
       context: ./srvc3_prod/db
     container_name: db_product
+    image: artezorro/db_product:v2
     ports:
       - "${PRODUCT_PGPORT}:5432"
     environment:
@@ -120,10 +123,6 @@ services:
     volumes:
       - pgdata_product:/var/lib/postgresql/data
 
-  adminer:
-      image: adminer
-      ports:
-        - 8080:8080
 
 volumes:
   pgdata_user:

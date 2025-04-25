@@ -1,9 +1,18 @@
 import { gql } from 'graphql-tag';
 
 export default gql`
+
   type Product {
     id: ID!
     name: String
+    type: String
+    category: String
+    brand: String
+    price: Float
+    stock: Int
+    rating: Float
+    releaseDate: String
+    warrantyPeriod: String
   }
 
   extend type Query {
