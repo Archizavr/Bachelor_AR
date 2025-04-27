@@ -79,13 +79,13 @@ start_all_dev_01_new_order: ### Execute all REST API and GraphQL tests in dev mo
 	sleep 3
 	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachDev.postman_environment.json ./reports/output_GQL_dev.html 20 ./reports/statistics_dev_20_GQL.csv >>./reports/stat_full_run_dev.log
 	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html 50 ./reports/statistics_dev_50_REST.csv >>./reports/stat_full_run_dev.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachDev.postman_environment.json ./reports/output_GQL_dev.html 50 ./reports/statistics_dev_50_GQL.csv >>./reports/stat_full_run_dev.log
+	sleep 3
 	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html 100 ./reports/statistics_dev_100_REST.csv >>./reports/stat_full_run_dev.log
 	sleep 3
 	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachDev.postman_environment.json ./reports/output_GQL_dev.html 100 ./reports/statistics_dev_100_GQL.csv >>./reports/stat_full_run_dev.log
-	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html 300 ./reports/statistics_dev_300_REST.csv >>./reports/stat_full_run_dev.log
-	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachDev.postman_environment.json ./reports/output_GQL_dev.html 300 ./reports/statistics_dev_300_GQL.csv >>./reports/stat_full_run_dev.log
 .PHONY: start_all_dev_01_new_order
 
 start_all_test_01_new_order: ### Execute all REST API and GraphQL tests in test mode and save statistics
@@ -102,13 +102,13 @@ start_all_test_01_new_order: ### Execute all REST API and GraphQL tests in test 
 	sleep 3
 	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 20 ./reports/statistics_test_20_GQL.csv >>./reports/stat_full_run_test.log
 	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 50 ./reports/statistics_test_50_REST.csv >>./reports/stat_full_run_test.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 50 ./reports/statistics_test_50_GQL.csv >>./reports/stat_full_run_test.log
+	sleep 3
 	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 100 ./reports/statistics_test_100_REST.csv >>./reports/stat_full_run_test.log
 	sleep 3
 	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 100 ./reports/statistics_test_100_GQL.csv >>./reports/stat_full_run_test.log
-	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 300 ./reports/statistics_test_300_REST.csv >>./reports/stat_full_run_test.log
-	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 300 ./reports/statistics_test_300_GQL.csv >>./reports/stat_full_run_test.log
 .PHONY: start_all_dev_01_new_order
 
 start_all_test_dev_rest_10: ### Execute all REST API tests in dev mode 1, 20 and 50 times
