@@ -17,10 +17,13 @@ restart: stop ### Stop and re-build docker compose
 .PHONY: restart
 
 deploy: ### Push all images to docker repository
-	docker push artezorro/api_gateway:v1
-	docker push artezorro/srvc1_user:v1
-	docker push artezorro/srvc2_order:v1
-	docker push artezorro/srvc3_prod:v1
+	docker push artezorro/api_gateway:v2
+	docker push artezorro/srvc1_user:v2
+	docker push artezorro/srvc2_order:v2
+	docker push artezorro/srvc3_prod:v2
+	docker push artezorro/db_user:v2
+	docker push artezorro/db_order:v2
+	docker push artezorro/db_product:v2
 .PHONY: deploy
 
 clear: stop ### Remove all created containers & images
@@ -28,19 +31,31 @@ clear: stop ### Remove all created containers & images
 	docker image prune -a -f
 .PHONY: clear
 
+start_db: ### Run all databases
+	docker-compose up db_order db_user db_product -d
+
+stop_db: ### Stop all databases
+	docker-compose down db_user
+	docker-compose down db_order
+	docker-compose down db_product
+
+clear_db: ### Clear all databases
+	docker-compose down
+	docker-compose prune
+
 run_dev: ### Run all standalone NodeJS services
-	@node srvc1_user/usersService.js &
-	@node srvc2_order/ordersService.js &
-	@node srvc3_prod/productService.js &
-	@node api_gateway/gateway_appolo.js &
+	@node srvc1_user/server.js &
+	@node srvc2_order/server.js &
+	@node srvc3_prod/server.js &
+	@node api_gateway/server.js &
 	@echo "Services started in the background."
 .PHONY: run_dev
 
 stop_dev: ### Stop all standalone NodeJS services
-	@pkill -f "node srvc1_user/usersService.js" &
-	@pkill -f "node srvc2_order/ordersService.js" &
-	@pkill -f "node srvc3_prod/productService.js" &
-	@pkill -f "node api_gateway/gateway_appolo.js" &
+	@pkill -f "node srvc1_user/server.js" &
+	@pkill -f "node srvc2_order/server.js" &
+	@pkill -f "node srvc3_prod/server.js" &
+	@pkill -f "node api_gateway/server.js" &
 	@echo "Services stopped."
 .PHONY: stop_dev
 
@@ -61,6 +76,61 @@ test_endp: start_all_test_rest start_all_test_gql ### Test all endpoints REST AP
 start_all_test_dev_rest: # Execute all REST API tests in dev mode
 	node e2e_test/test_collection.js ./00_Test_All_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html
 .PHONY: start_all_test_dev_rest
+
+start_all_dev_01_new_order: ### Execute all REST API and GraphQL tests in dev mode and save statistics
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html 1 ./reports/statistics_dev_01_REST.csv >./reports/stat_full_run_dev.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachDev.postman_environment.json ./reports/output_GQL_dev.html 1 ./reports/statistics_dev_01_GQL.csv >>./reports/stat_full_run_dev.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html 10 ./reports/statistics_dev_10_REST.csv >>./reports/stat_full_run_dev.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachDev.postman_environment.json ./reports/output_GQL_dev.html 10 ./reports/statistics_dev_10_GQL.csv >>./reports/stat_full_run_dev.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html 20 ./reports/statistics_dev_20_REST.csv >>./reports/stat_full_run_dev.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachDev.postman_environment.json ./reports/output_GQL_dev.html 20 ./reports/statistics_dev_20_GQL.csv >>./reports/stat_full_run_dev.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html 50 ./reports/statistics_dev_50_REST.csv >>./reports/stat_full_run_dev.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachDev.postman_environment.json ./reports/output_GQL_dev.html 50 ./reports/statistics_dev_50_GQL.csv >>./reports/stat_full_run_dev.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html 100 ./reports/statistics_dev_100_REST.csv >>./reports/stat_full_run_dev.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachDev.postman_environment.json ./reports/output_GQL_dev.html 100 ./reports/statistics_dev_100_GQL.csv >>./reports/stat_full_run_dev.log
+.PHONY: start_all_dev_01_new_order
+
+start_all_test_01_new_order: ### Execute all REST API and GraphQL tests in test mode and save statistics
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 1 ./reports/statistics_test_01_REST.csv >./reports/stat_full_run_test.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 1 ./reports/statistics_test_01_GQL.csv >>./reports/stat_full_run_test.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 10 ./reports/statistics_test_10_REST.csv >>./reports/stat_full_run_test.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 10 ./reports/statistics_test_10_GQL.csv >>./reports/stat_full_run_test.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 20 ./reports/statistics_test_20_REST.csv >>./reports/stat_full_run_test.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 20 ./reports/statistics_test_20_GQL.csv >>./reports/stat_full_run_test.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 50 ./reports/statistics_test_50_REST.csv >>./reports/stat_full_run_test.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 50 ./reports/statistics_test_50_GQL.csv >>./reports/stat_full_run_test.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 100 ./reports/statistics_test_100_REST.csv >>./reports/stat_full_run_test.log
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 100 ./reports/statistics_test_100_GQL.csv >>./reports/stat_full_run_test.log
+.PHONY: start_all_dev_01_new_order
+
+start_all_test_dev_rest_10: ### Execute all REST API tests in dev mode 1, 20 and 50 times
+	sleep 3
+	node e2e_test/test_collection.js ./00_Test_All_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html 1 ./reports/statistics_dev_01.csv >./reports/overall_stat.log
+	sleep 3
+	node e2e_test/test_collection.js ./00_Test_All_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html 20 ./reports/statistics_dev_20.csv >>./reports/overall_stat.log
+	sleep 3
+	node e2e_test/test_collection.js ./00_Test_All_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html 50 ./reports/statistics_dev_50.csv >>./reports/overall_stat.log
+.PHONY: start_all_test_dev_rest_10
 
 start_all_test_dev_gql: # Execute all GraphQL tests in dev mode
 	node e2e_test/test_collection.js ./00_Test_All_GQL_POST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_GQL_dev.html

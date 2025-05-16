@@ -1,0 +1,12 @@
+{
+  "name": "postman-autocannon-runner",
+  "version": "1.0.0",
+  "description": "Run Postman collections with autocannon for load testing",
+  "main": "postman-autocannon-script.js",
+  "scripts": {
+    "test": "node postman-autocannon-script.js"
+  },
+  "dependencies": {
+    "autocannon": "^7.12.0"
+  }
+}

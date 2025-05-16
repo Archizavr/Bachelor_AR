@@ -8,3 +8,5 @@ reports/
 *.log
 config.json
 .env
+nul
+null
