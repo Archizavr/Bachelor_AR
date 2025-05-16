@@ -5,7 +5,7 @@ const path = require('path');
 // Get command-line arguments
 const collectionPath = process.argv[2] || './00_Test_All_REST.postman_collection.json';
 const environmentPath = process.argv[3] || './BachTest01.postman_environment.json';
-const reportPath = process.argv[4] || './output.html';
+// const reportPath = process.argv[4] || './output.html';
 const iterations = parseInt(process.argv[5], 10) || 1; // Atkārtojumu skaits
 const csvFileName = process.argv[6] || 'statistics.csv'; // CSV faila nosaukums zvanu statistikas saglabāšanai
 
@@ -31,13 +31,14 @@ const runCollection = (iteration) => {
             environment: require(environmentPath),
             insecure: true,
             verbose: true,
-            reporters: 'htmlextra',
-            reporter: {
-                htmlextra: {
-                    // export: reportPath+"_"+iteration+".html"
-                    export: reportPath
-                }
-            }
+            reporters: 'cli',
+            // reporters: 'htmlextra',
+            // reporter: {
+            //     htmlextra: {
+            //         // export: reportPath+"_"+iteration+".html"
+            //         export: reportPath
+            //     }
+            // }
         }, (err, summary) => {
             if (err) return reject(err);
 
@@ -78,33 +79,43 @@ const runCollection = (iteration) => {
     // console.log(`Starting ${iterations} iterations of the collection...`);
 
     const startTime = Date.now(); // Visu kolekciju sākuma laika noteikšana
+    const batchSize = 100;
+    let results;
 
     try {
-        const results = await Promise.all(
-            Array.from({ length: iterations }, (_, i) => runCollection(i + 1))
-        );
-
+        // fs.writeFileSync(csvFilePath, header, 'utf8');
         const header = `Iteration,StartTime,EndTime,Total,Errors,Sent,Received,${serviceNames.map(name => `${name},Code`).join(',')}\n`;
-        fs.writeFileSync(csvFilePath, header, 'utf8');
 
+        for (let index = 0; index < iterations/batchSize ; index++) {
+            const curLen = Math.min(batchSize, iterations - index*batchSize)
+            console.log("i "+index + " -" + curLen);
 
-        results.forEach(({ iteration, timings, summary }) => {
-            const row = [
-                iteration,
-                summary.startTime,
-                summary.endTime,
-                summary.totalRequests,
-                summary.totalErrors,
-                summary.requestData.sent,
-                summary.requestData.received,                
-                ...serviceNames.map(service => {
-                    const timing = timings.find(t => t.name === service);
-                    return timing ? `${timing.time},${timing.status}` : 'N/A,N/A';
-                })
-            ].join(',');
+            results = await Promise.all(
+                Array.from({ length: curLen }, (_, i) => runCollection(i + 1))
+            );
+        // const results = await Promise.all(
+        //     Array.from({ length: iterations }, (_, i) => runCollection(i + 1))
+        // );
 
-            fs.appendFileSync(csvFilePath, row + '\n', 'utf8');
-        });
+            results.forEach(({ iteration, timings, summary }) => {
+                const row = [
+                    iteration,
+                    summary.startTime,
+                    summary.endTime,
+                    summary.totalRequests,
+                    summary.totalErrors,
+                    summary.requestData.sent,
+                    summary.requestData.received,                
+                    ...serviceNames.map(service => {
+                        const timing = timings.find(t => t.name === service);
+                        return timing ? `${timing.time},${timing.status}` : 'N/A,N/A';
+                    })
+                ].join(',');
+    
+                fs.appendFileSync(csvFilePath, row + '\n', 'utf8');
+            });
+
+        }
 
         const endTime = Date.now(); // Visu kolekciju pabeigšanas laiks
         console.log(`Executed ${iterations} iterations. Total execution time: ${endTime - startTime} ms. See details in ${csvFilePath}.`); // Aprēķināt kopējo izpildes laiku

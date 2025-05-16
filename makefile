@@ -31,19 +31,31 @@ clear: stop ### Remove all created containers & images
 	docker image prune -a -f
 .PHONY: clear
 
+start_db: ### Run all databases
+	docker-compose up db_order db_user db_product -d
+
+stop_db: ### Stop all databases
+	docker-compose down db_user
+	docker-compose down db_order
+	docker-compose down db_product
+
+clear_db: ### Clear all databases
+	docker-compose down
+	docker-compose prune
+
 run_dev: ### Run all standalone NodeJS services
-	@node srvc1_user/usersService.js &
-	@node srvc2_order/ordersService.js &
-	@node srvc3_prod/productService.js &
-	@node api_gateway/gateway_appolo.js &
+	@node srvc1_user/server.js &
+	@node srvc2_order/server.js &
+	@node srvc3_prod/server.js &
+	@node api_gateway/server.js &
 	@echo "Services started in the background."
 .PHONY: run_dev
 
 stop_dev: ### Stop all standalone NodeJS services
-	@pkill -f "node srvc1_user/usersService.js" &
-	@pkill -f "node srvc2_order/ordersService.js" &
-	@pkill -f "node srvc3_prod/productService.js" &
-	@pkill -f "node api_gateway/gateway_appolo.js" &
+	@pkill -f "node srvc1_user/server.js" &
+	@pkill -f "node srvc2_order/server.js" &
+	@pkill -f "node srvc3_prod/server.js" &
+	@pkill -f "node api_gateway/server.js" &
 	@echo "Services stopped."
 .PHONY: stop_dev
 

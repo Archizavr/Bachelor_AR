@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "e6df6849-eb34-4c8a-9a2e-e01798c2c081",
-		"name": "01_New_order_2_prod_REST",
+		"_postman_id": "819dcc14-728d-4b2a-b5d1-f11aaeccecad",
+		"name": "00_Test_All_REST",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "41708234"
 	},
@@ -13,17 +13,20 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"User ID is present in response\", function () {",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    // console.log(\"Proverka\")",
 							"    const responseBody = pm.response.json();",
-							"    ",
-							"    // console.log(responseBody);",
+							"    // console.log(responseBody)",
+							"    // console.log(typeof(responseBody))",
+							"    // console.log(responseBody.id)",
 							"",
-							"    pm.expect(responseBody).to.be.an('object'); // Check if it's an object",
-							"    pm.expect(responseBody).to.have.property('id'); // Check if 'id' property exists",
+							"    pm.expect(responseBody).to.be.an('object');",
+							"    pm.expect(responseBody).to.have.property('id');",
 							"    pm.environment.set(\"user_id\", responseBody.id);",
 							"",
-							"    pm.response.to.have.status(201);",
-							"});"
+							"});",
+							""
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -97,38 +100,77 @@
 			"response": []
 		},
 		{
-			"name": "Create order",
+			"name": "Get users",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"User ID is present in response\", function () {",
-							"    pm.response.to.have.status(201);",
-							"",
-							"    const responseBody = pm.response.json();",
-							"    pm.expect(responseBody).to.be.an('object'); // Check if it's an object",
-							"    pm.expect(responseBody).to.have.property('id'); // Check if 'id' property exists",
-							"    pm.environment.set(\"order_id\", responseBody.id);",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
 							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
 					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
+				"url": "{{ServerUser}}/users"
+			},
+			"response": []
+		},
+		{
+			"name": "Get orders",
+			"event": [
 				{
-					"listen": "prerequest",
+					"listen": "test",
 					"script": {
 						"exec": [
-							"function getRandomNumber(min, max) {",
-							"    return Math.floor(Math.random() * (max - min + 1)) + min;",
-							"}",
-							"",
-							"const product1 = getRandomNumber(1, 20);",
-							"const product2 = getRandomNumber(1, 20);",
-							"",
-							"pm.variables.set(\"product1\", product1);",
-							"pm.variables.set(\"product2\", product2);"
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{ServerOrder}}/orders"
+			},
+			"response": []
+		},
+		{
+			"name": "Create orders",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    const responseBody = pm.response.json();",
+							"    pm.expect(responseBody).to.be.an('object');",
+							"    pm.expect(responseBody).to.have.property('id');",
+							"    pm.environment.set(\"order_id\", responseBody.id);",
+							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -140,7 +182,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"userId\": {{user_id}},\n    \"products\": [{{product1}}, {{product2}}],\n    \"amount\": 2\n}",
+					"raw": "{\n    \"userId\": {{user_id}},\n    \"products\": [],\n    \"amount\": 2\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -148,6 +190,38 @@
 					}
 				},
 				"url": "{{ServerOrder}}/orders"
+			},
+			"response": []
+		},
+		{
+			"name": "Add product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"product\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{ServerOrder}}/orders/{{order_id}}/product"
 			},
 			"response": []
 		},
@@ -167,21 +241,9 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "{{ServerOrder}}/orders?userId={{user_id}}",
 					"host": [
@@ -201,7 +263,7 @@
 			"response": []
 		},
 		{
-			"name": "Get product 1",
+			"name": "Get products",
 			"event": [
 				{
 					"listen": "test",
@@ -216,27 +278,15 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": "{{ServerProduct}}/products/{{product1}}"
+				"url": "{{ServerProduct}}/products"
 			},
 			"response": []
 		},
 		{
-			"name": "Get product 2",
+			"name": "Get product",
 			"event": [
 				{
 					"listen": "test",
@@ -251,58 +301,12 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": "{{ServerProduct}}/products/{{product2}}"
+				"url": "{{ServerProduct}}/products/{{product_id}}"
 			},
 			"response": []
-		}
-	],
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"packages": {},
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "product1",
-			"value": "1",
-			"type": "string"
-		},
-		{
-			"key": "product2",
-			"value": "2",
-			"type": "string"
 		}
 	]
 }
