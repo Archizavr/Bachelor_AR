@@ -165,7 +165,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"query\": \"query GetOrders($userId: ID!) {  getOrders(userId: $userId, limit: 99) { orders { id userid amount products { products { id name }} } pageInfo {hasNextPage} }}\",\n  \"variables\": {    \n    \"userId\": {{user_id}}\n  }\n}",
+					"raw": "{\n  \"query\": \"query GetOrders($userId: ID!) {  getOrders(userId: $userId, limit: 99) { orders { id userid amount products { products { id name price }} } pageInfo {hasNextPage} }}\",\n  \"variables\": {    \n    \"userId\": {{user_id}}\n  }\n}",
 					"options": {
 						"raw": {
 							"language": "json"

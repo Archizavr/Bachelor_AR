@@ -7,6 +7,7 @@ services:
     expose:
       - "3000"
     ports:
+      # - "5001:4101"
       - "5001:${SRVC_USR_PORT}"
     environment:
       - NODE_ENV=production
@@ -28,6 +29,7 @@ services:
     expose:
       - "3000"
     ports:
+      # - "5002:4102"
       - "5002:${SRVC_ORD_PORT}"
     environment:
       - NODE_ENV=development
@@ -48,6 +50,7 @@ services:
     expose:
       - "3000"
     ports:
+      # - "5003:4103"
       - "5003:${SRVC_PROD_PORT}"
     environment:
       - NODE_ENV=development
@@ -66,6 +69,7 @@ services:
     image: artezorro/api_gateway:v2
     container_name: api_gateway
     ports:
+      # - "5000:4100"
       - "5000:${GATEWAY_PORT}"
     environment:
       - NODE_ENV=production
@@ -101,6 +105,7 @@ services:
     container_name: db_order
     image: artezorro/db_order:v2
     ports:
+      # - "5442:5432"
       - "${ORDER_PGPORT}:5432"
     environment:
       POSTGRES_USER: ${ORDER_PGUSER}
@@ -115,6 +120,7 @@ services:
     container_name: db_product
     image: artezorro/db_product:v2
     ports:
+      # - "5443:5432"
       - "${PRODUCT_PGPORT}:5432"
     environment:
       POSTGRES_USER: ${PRODUCT_PGUSER}

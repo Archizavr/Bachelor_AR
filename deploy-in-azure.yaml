@@ -5,7 +5,7 @@ properties:
   containers:
   - name: api-gateway
     properties:
-      image: bachcontainerreg.azurecr.io/api_gateway:v1 
+      image: bachcontainerreg.azurecr.io/api_gateway:v2
       resources:
         requests:
           cpu: 1
@@ -15,7 +15,21 @@ properties:
       - port: 8080
   - name: service-user
     properties:
-      image: bachcontainerreg.azurecr.io/srvc1_user:v1
+      image: bachcontainerreg.azurecr.io/srvc1_user:v2
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 1.5
+  - name: service-order
+    properties:
+      image: bachcontainerreg.azurecr.io/srvc1_order:v2
+      resources:
+        requests:
+          cpu: 1
+          memoryInGb: 1.5
+  - name: service-product
+    properties:
+      image: bachcontainerreg.azurecr.io/srvc1_product:v2
       resources:
         requests:
           cpu: 1

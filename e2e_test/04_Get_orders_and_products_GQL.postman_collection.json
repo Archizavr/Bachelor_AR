@@ -1,0 +1,28 @@
+{
+	"info": {
+		"_postman_id": "37d5cd3f-1aa3-4117-ba49-3412cc6d1e6b",
+		"name": "04_Get_orders_and_products_GQL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "41708234"
+	},
+	"item": [
+		{
+			"name": "Get orders and products",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"query\": \"query GetOrders { getOrders { orders { id amount products { products { id name }}  }}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{ServerApollo}}"
+			},
+			"response": []
+		}
+	]
+}
