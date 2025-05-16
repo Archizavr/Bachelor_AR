@@ -12,6 +12,7 @@ VALUES
   (2, '1', ARRAY['2', '1'], 25.00),
   (3, '2', ARRAY['3', '2'], 75.00);
 
+SELECT SETVAL('public.orders_id_seq', 3);
 
 CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,

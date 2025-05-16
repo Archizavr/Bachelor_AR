@@ -123,6 +123,30 @@ start_all_test_01_new_order: ### Execute all REST API and GraphQL tests in test 
 	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 100 ./reports/statistics_test_100_GQL.csv >>./reports/stat_full_run_test.log
 .PHONY: start_all_dev_01_new_order
 
+start_all_test_01_new_order_cloud_rest: # Execute all REST API and GraphQL tests in cloud mode and save statistics
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachGoogleCloud.postman_environment.json ./reports/output_REST_cloud.html 1 ./reports/Cloud/statistics_dev_1_REST.csv > nul
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachGoogleCloud.postman_environment.json ./reports/output_GQL_cloud.html 1 ./reports/Cloud/statistics_dev_1_GQL.csv > nul
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachGoogleCloud.postman_environment.json ./reports/output_REST_cloud.html 10 ./reports/Cloud/statistics_dev_10_REST.csv > nul
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachGoogleCloud.postman_environment.json ./reports/output_GQL_cloud.html 10 ./reports/Cloud/statistics_dev_10_GQL.csv > nul
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachGoogleCloud.postman_environment.json ./reports/output_REST_cloud.html 20 ./reports/Cloud/statistics_dev_20_REST.csv > nul
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachGoogleCloud.postman_environment.json ./reports/output_GQL_cloud.html 20 ./reports/Cloud/statistics_dev_20_GQL.csv > nul
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachGoogleCloud.postman_environment.json ./reports/output_REST_cloud.html 50 ./reports/Cloud/statistics_dev_50_REST.csv > nul
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachGoogleCloud.postman_environment.json ./reports/output_GQL_cloud.html 50 ./reports/Cloud/statistics_dev_50_GQL.csv > nul
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachGoogleCloud.postman_environment.json ./reports/output_REST_cloud.html 100 ./reports/Cloud/statistics_dev_100_REST.csv > nul
+	sleep 3
+	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachGoogleCloud.postman_environment.json ./reports/output_GQL_cloud.html 100 ./reports/Cloud/statistics_dev_100_GQL.csv > nul
+	
+.PHONY: start_all_test_cloud_rest
+
 start_all_test_dev_rest_10: ### Execute all REST API tests in dev mode 1, 20 and 50 times
 	sleep 3
 	node e2e_test/test_collection.js ./00_Test_All_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html 1 ./reports/statistics_dev_01.csv >./reports/overall_stat.log
@@ -139,16 +163,12 @@ start_all_test_dev_gql: # Execute all GraphQL tests in dev mode
 test_endp_dev: start_all_test_dev_rest start_all_test_dev_gql ### Test all endpoints REST API & GraphQL in dev mode
 .PHONY: test_endp_dev
 
-start_all_test_azure_rest: # Execute all REST API tests in cloud mode
-	node e2e_test/test_collection.js ./00_Test_All_REST.postman_collection.json ./BachAzureTest.postman_environment.json ./reports/output_REST_azure.html
-.PHONY: start_all_test_azure_rest
+start_all_test_cloud_gql: # Execute all GraphQL tests in cloud mode
+	node e2e_test/test_collection.js ./00_Test_All_GQL_POST.postman_collection.json ./BachGoogleCloud.postman_environment.json ./reports/output_GQL_cloud.html
+.PHONY: start_all_test_cloud_gql
 
-start_all_test_azure_gql: # Execute all GraphQL tests in cloud mode
-	node e2e_test/test_collection.js ./00_Test_All_GQL_POST.postman_collection.json ./BachAzureTest.postman_environment.json ./reports/output_GQL_azure.html
-.PHONY: start_all_test_azure_gql
-
-test_endp_azure: start_all_test_azure_rest start_all_test_azure_gql ### Test all endpoints REST API & GraphQL in cloud mode
-.PHONY: test_endp_azure
+test_endp_cloud: start_all_test_cloud_rest start_all_test_cloud_gql ### Test all endpoints REST API & GraphQL in cloud mode
+.PHONY: test_endp_cloud
 
 test_time_01: ### Test scenario 01: REST API & GraphQL in test mode
 	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST01.html

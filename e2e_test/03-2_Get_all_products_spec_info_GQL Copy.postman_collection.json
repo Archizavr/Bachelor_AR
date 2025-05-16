@@ -1,0 +1,42 @@
+{
+	"info": {
+		"_postman_id": "5548f6cf-251b-46f3-acec-f0b553e44a36",
+		"name": "03-2_Get_all_products_spec_info_GQL Copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "41708234"
+	},
+	"item": [
+		{
+			"name": "Get all products spec info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"query\": \"query GetProduct {  getProducts{ products { id name }}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{ServerApollo}}"
+			},
+			"response": []
+		}
+	]
+}

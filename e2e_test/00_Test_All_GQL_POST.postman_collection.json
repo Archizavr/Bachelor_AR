@@ -27,7 +27,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"query\": \"query GetUser($getUserId: ID!) {  getUser(id: $getUserId) {    email    name  }}\",\n  \"variables\": {    \n    \"getUserId\": 1\n  }\n}",
+					"raw": "{\n  \"query\": \"query GetUser($getUserId: ID!) {  getUser(id: $getUserId) { email name }}\",\n  \"variables\": {    \n    \"getUserId\": 1\n  }\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -59,7 +59,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"query\": \"query GetUser {  getUsers(limit:99){ users { id email name } pageInfo { startCursor endCursor totalCount hasNextPage }}}\"\n}\n",
+					"raw": "{\n  \"query\": \"query GetUser {  getUsers { users { id email name } pageInfo { startCursor endCursor totalCount hasNextPage }}}\"\n}\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -187,7 +187,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"query\": \"query GetProduct {  getProducts{ products { id name }}}\",\n  \"variables\": {    \n    \"getUserId\": 1\n  }\n}",
+					"raw": "{\n  \"query\": \"query GetProduct {  getProducts{ products { id name }}}\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
