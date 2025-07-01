@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "5548f6cf-251b-46f3-acec-f0b553e44a36",
-		"name": "03-2_Get_all_products_spec_info_GQL Copy",
+		"name": "03-2_Get_all_products_spec_info_GQL",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "41708234"
 	},

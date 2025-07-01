@@ -3,6 +3,7 @@ node_modules/
 
 # Ignore reports directory
 reports/
+cpu_test/
 
 # Other common ignores
 *.log
@@ -10,3 +11,4 @@ config.json
 .env
 nul
 null
+docker_stats.csv
