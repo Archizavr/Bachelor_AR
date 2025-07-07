@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+// import '../assets/products.json'; // Assuming you have a products.json file for demonstration
 
 const NavigationBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -120,7 +121,7 @@ const NavigationBar = () => {
   // Simple media query hook
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
       if (window.innerWidth > 768) {
@@ -131,6 +132,20 @@ const NavigationBar = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const [dataJSON, setData] = useState(null);
+
+  useEffect(() => {
+    fetch('../../public/products.json') // Adjust the path as necessary
+      .then(response => response.json())
+      .then(data => {
+        setData(data)
+        console.log('Data fetched successfully:', data);
+      })
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
+
+  if (!dataJSON) return <div>Loading...</div>;
 
   // Handle navigation click
   const handleNavClick = (section) => {
@@ -182,7 +197,7 @@ const NavigationBar = () => {
                   Object.assign(e.target.style, getLinkStyle('home'));
                 }}
               >
-                🏠 Home
+                Products
               </a>
             </li>
             <li>
@@ -245,7 +260,7 @@ const NavigationBar = () => {
                     toggleMenu();
                   }}
                 >
-                  🏠 Home
+                  Products
                 </a>
               </li>
               <li>
@@ -283,10 +298,11 @@ const NavigationBar = () => {
       {/* Demo content to show the navbar in action */}
       <div style={{padding: '20px', maxWidth: '1200px', margin: '0 auto'}}>
         <section id="home" style={{minHeight: '500px', padding: '40px 0'}}>
-          <h1 style={{fontSize: '32px', marginBottom: '20px', color: '#333'}}>Home Section</h1>
+          <h1 style={{fontSize: '32px', marginBottom: '20px', color: '#333'}}>Products</h1>
           <p style={{fontSize: '16px', lineHeight: '1.6', color: '#666'}}>
-            Welcome to our website! This navigation bar is fixed at the top and uses only default React features.
-            No external dependencies required - just React's built-in useState and useEffect hooks.
+            <ul>
+              {dataJSON.products.map(product => (<li key={product.id}>{product.name} price is ${product.price}</li>))}
+            </ul>
           </p>
         </section>
         

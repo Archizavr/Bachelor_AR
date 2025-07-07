@@ -32,16 +32,16 @@ clear: stop ### Remove all created containers & images
 .PHONY: clear
 
 start_db: ### Run all databases
-	docker-compose up db_order db_user db_product -d
+	docker compose up db_order db_user db_product -d
 
 stop_db: ### Stop all databases
-	docker-compose down db_user
-	docker-compose down db_order
-	docker-compose down db_product
+	docker compose down db_user
+	docker compose down db_order
+	docker compose down db_product
 
 clear_db: ### Clear all databases
-	docker-compose down
-	docker-compose prune
+	docker compose down
+	docker compose prune
 
 run_dev: ### Run all standalone NodeJS services
 	@node srvc1_user/server.js &

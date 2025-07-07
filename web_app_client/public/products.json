@@ -1,0 +1,70 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Apple iPhone 14 Pro",
+      "type": "Smartphone",
+      "category": "Mobile Devices",
+      "brand": "Apple",
+      "price": "999.99",
+      "stock": 25,
+      "rating": "4.80",
+      "release_date": "2022-09-15T21:00:00.000Z",
+      "warranty_period": "1 year"
+    },
+    {
+      "id": 2,
+      "name": "Samsung Galaxy S23 Ultra",
+      "type": "Smartphone",
+      "category": "Mobile Devices",
+      "brand": "Samsung",
+      "price": "1199.99",
+      "stock": 30,
+      "rating": "4.70",
+      "release_date": "2023-01-31T22:00:00.000Z",
+      "warranty_period": "1 year"
+    },
+    {
+      "id": 3,
+      "name": "Sony WH-1000XM5",
+      "type": "Headphones",
+      "category": "Audio Devices",
+      "brand": "Sony",
+      "price": "399.99",
+      "stock": 50,
+      "rating": "4.60",
+      "release_date": "2022-05-11T21:00:00.000Z",
+      "warranty_period": "2 years"
+    },
+    {
+      "id": 4,
+      "name": "Dell XPS 15",
+      "type": "Laptop",
+      "category": "Computers",
+      "brand": "Dell",
+      "price": "1799.99",
+      "stock": 10,
+      "rating": "4.50",
+      "release_date": "2022-08-29T21:00:00.000Z",
+      "warranty_period": "1 year"
+    },
+    {
+      "id": 5,
+      "name": "Apple MacBook Air M2",
+      "type": "Laptop",
+      "category": "Computers",
+      "brand": "Apple",
+      "price": "1249.99",
+      "stock": 15,
+      "rating": "4.80",
+      "release_date": "2022-07-14T21:00:00.000Z",
+      "warranty_period": "1 year"
+    }
+  ],
+  "pageInfo": {
+    "startCursor": 0,
+    "endCursor": 4,
+    "totalCount": 20,
+    "hasNextPage": true
+  }
+}
