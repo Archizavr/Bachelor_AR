@@ -1,6 +1,6 @@
 import { pool } from '../../db/client.js';
 
-export const getAllOrders = async (userId, offset = 0, limit = 5) => {
+export const getAllOrders = async (userId, apiKey, offset = 0, limit = 5) => {
   let orders;
   let totalCount;
 

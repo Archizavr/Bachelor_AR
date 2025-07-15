@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import morgan from 'morgan';
 // import dotenv from 'dotenv';
 import orderRoutes from './modules/orders/order.routes.js';
@@ -10,6 +11,11 @@ const PORT = process.env.PORT || 4002;
 
 app.use(morgan('dev'));
 app.use(express.json());
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+  exposedHeaders: ['X_API_KEY']
+}));
 
 app.get('/', (req, res) => {
   res.json({ Status: 'OK', Message: 'Order service' });

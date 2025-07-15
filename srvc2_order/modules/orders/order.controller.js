@@ -1,11 +1,17 @@
 import * as orderService from './order.service.js';
 
+const X_API_KEY = process.env.X_API_KEY || 'SendAllProductsToMe';
+
 export const getOrders = async (req, res) => {
   const offset = parseInt(req.query.offset, 10) || 0;
   const limit = parseInt(req.query.limit, 10) || 5;
   const userId = req.query.userId || null;
+  const apiKey = req.headers['x-api-key'] || null;
 
   try {
+    if (apiKey !== X_API_KEY) {
+      return res.status(403).json({ error: 'Access denied. Invalid API Key. User is not authorized to access this resource.' });
+    }
     const { orders, pageInfo } = await orderService.getAllOrders(userId, offset, limit);
     res.json({ orders, pageInfo });
   } catch (err) {

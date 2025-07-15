@@ -1,0 +1,149 @@
+/* NavigationBar.css */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1000;
+    padding: 0 20px;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 30px;
+  }
+  
+  .nav-link {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+  
+  .nav-link:hover {
+    background-color: #f0f0f0;
+    color: #007bff;
+  }
+  
+  .nav-link.active {
+    background-color: #007bff;
+    color: #ffffff;
+  }
+  
+  .nav-link.active:hover {
+    background-color: #007bff;
+    color: #ffffff;
+  }
+  
+  .nav-buttons {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 4px;
+    background: transparent;
+    border: 1px solid #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .nav-buttons:hover {
+    background-color: #333;
+    color: #ffffff;
+  }
+  
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 5px;
+    background-color: transparent;
+    border: none;
+  }
+  
+  .hamburger-line {
+    width: 25px;
+    height: 3px;
+    background-color: #333;
+    margin: 2px 0;
+    transition: 0.3s;
+  }
+  
+  .mobile-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+  }
+  
+  .mobile-menu.open {
+    display: block;
+  }
+  
+  .mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 15px;
+  }
+  
+  .mobile-nav-link {
+    color: #333;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .mobile-nav-link.active {
+    color: #007bff;
+    font-weight: bold;
+    border-bottom: 2px solid #007bff;
+  }
+  
+  .navbar-spacer {
+    height: 60px;
+  }
+  
+  /* Media Queries */
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+    }
+    
+    .hamburger {
+      display: flex;
+    }
+  }

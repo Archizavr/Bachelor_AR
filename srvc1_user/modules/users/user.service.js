@@ -44,6 +44,11 @@ export const getUserByName = async (name) => {
   return res.rows;
 };
 
+export const getUserByEmail = async (email) => {
+  const res = await pool.query('SELECT id, name, email FROM users WHERE email = $1', [email]);
+  return res.rows;
+};
+
 export const getUserById = async (id) => {
   const res = await pool.query('SELECT id, name, email FROM users WHERE id = $1', [id]);
   return res.rows[0];
@@ -63,9 +68,9 @@ export const createUser = async (name, email, password) => {
 };
     
 // Authenticate user (check username and plain text password)
-export const authenticateUser = async (name, password) => {
-  // Find user by name
-  const users = await getUserByName(name);
+export const authenticateUser = async (email, password) => {
+  // Find user by emil
+  const users = await getUserByEmail(email);
   if (users.length === 0) {
     throw new Error('User not found');
   }

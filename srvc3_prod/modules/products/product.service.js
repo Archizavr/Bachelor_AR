@@ -37,7 +37,19 @@ export const getAllProducts = async (offset = 0, limit = 5, name = null) => {
   return { products, pageInfo };
 };
 
-export const getProductById = async (id) => {
-  const res = await pool.query('SELECT * FROM products WHERE id = $1', [id]);
-  return res.rows[0];
+export const getFullProducts = async (offset = 0, limit = 5, name = null) => {
+  let products;
+
+  const startCursor = offset;
+  const endCursor = offset + products.length - 1;
+  const hasNextPage = offset + limit < totalCount;
+
+  const pageInfo = {
+    startCursor,
+    endCursor,
+    totalCount,
+    hasNextPage
+  };
+
+  return { products, pageInfo };
 };

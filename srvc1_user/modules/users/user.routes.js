@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUsers, getUser, postUser } from './user.controller.js';
+import { getUsers, getUser, postUser, authUser } from './user.controller.js';
 
 const router = express.Router();
 
@@ -84,6 +84,8 @@ router.get('/', getUsers);
  *         description: Lietotājs nav atrasts
  */
 router.get('/:id', getUser);
+
+router.get('/auth', authUser);
 
 /**
  * @swagger

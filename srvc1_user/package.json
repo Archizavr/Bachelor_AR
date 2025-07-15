@@ -21,7 +21,7 @@
   },
   "scripts": {
     "dev_old": "nodemon usersService",
-    "dev": "nodemon server",
+    "dev": "x_API-KEY=112 nodemon server",
     "start": "node server"
   },
   "keywords": [],
