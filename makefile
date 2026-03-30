@@ -1,3 +1,18 @@
+SHELL := /bin/bash
+
+JS_SCRIPT = e2e_test/test_collection.js
+
+ENV_DEV      = ./BachDev.postman_environment.json
+ENV_TEST = ./BachTest01.postman_environment.json
+
+REPORT_GQL_DEV  = ./reports/output_GQL_dev.html
+REPORT_REST_DEV = ./reports/output_REST_dev.html
+REPORT_REST_TEST = ./reports/output_REST_test.html
+
+ITER_SHORT = 100 1000 5000
+ITER_FULL = 1 10 20 50 100 200 300 400 500 600 700 800 900 1000 1500 2000 2500 3000 3500 4000 4500 5000
+
+
 .PHONY: help
 
 help: ## Display this help screen
@@ -174,7 +189,14 @@ start_all_test_01_new_order: ### Execute all REST API and GraphQL tests in test 
 	sleep 3
 	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 1 ./reports/statistics_test_01_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 10 ./reports/statistics_test_10_REST.csv > null
+	node e2e_test/test_collection.js ./05_Get_users_orders_products_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html 5000 ./reports/Dev/REST/statistics_dev_5000_REST.csv > nul	
+.PHONY: start_all_dev_01_test_rest
+
+COL_03_REST  = ./03_Get_all_products_REST.postman_collection.json
+COL_03_1_GQL = ./03-1_Get_all_products_all_info_GQL.postman_collection.json
+COL_03_2_GQL = ./03-2_Get_all_products_spec_info_GQL.postman_collection.json
+
+start_all_dev_03_1_test_gql: ### Execute all REST API and GraphQL tests in dev mode and save statistics
 	sleep 3
 	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 10 ./reports/statistics_test_10_GQL.csv > null
 	sleep 3
@@ -192,71 +214,174 @@ start_all_test_01_new_order: ### Execute all REST API and GraphQL tests in test 
 	sleep 3
 	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 200 ./reports/statistics_test_200_REST.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 200 ./reports/statistics_test_200_GQL.csv > null
+	node e2e_test/test_collection.js ./03_Get_all_products_REST.postman_collection.json ./BachDev.postman_environment.json ./reports/output_REST_dev.html 5000 ./reports/Dev/REST/statistics_dev_5000_REST.csv > nul
+.PHONY: start_all_dev_03_test_rest
+
+
+start_all_dev_03_test: ### Execute all REST API and GraphQL tests in dev mode and save statistics
+	@mkdir -p reports
+	@mkdir -p reports/Dev
+	@mkdir -p reports/Dev/REST
+	@mkdir -p reports/Dev/GQL
+
+	@for i in $(ITER_FULL); do \
+		echo "Running test with $$i iterations..."; \
+		sleep 3; \
+		node $(JS_SCRIPT) $(COL_03_REST)  $(ENV_DEV) $(REPORT_REST_DEV) $${i} ./reports/Dev/REST/statistics_dev_$${i}_REST.csv    > /dev/null 2>&1; \
+		sleep 3; \
+		node $(JS_SCRIPT) $(COL_03_1_GQL) $(ENV_DEV) $(REPORT_GQL_DEV)  $${i} ./reports/Dev/GQL/statistics_3_1_dev_$${i}_GQL.csv  > /dev/null 2>&1; \
+	done
+	@for i in $(ITER_FULL); do \
+		sleep 3; \
+		node $(JS_SCRIPT) $(COL_03_2_GQL) $(ENV_DEV) $(REPORT_GQL_DEV)  $${i} ./reports/Dev/GQL/statistics_3_2_dev_$${i}_GQL.csv  > /dev/null 2>&1; \
+	done
+.PHONY: start_all_dev_03_test
+
+COLLECTION = ./02_Create_user_REST.postman_collection.json
+
+start_all_test_02_rest:
+	@mkdir -p reports
+	@for i in $(ITER_FULL); do \
+		sleep 3; \
+		node $(JS_SCRIPT) $(COLLECTION) $(ENV_TEST) $(REPORT_REST_TEST) $$i ./reports/statistics_test_$${i}_REST.csv > /dev/null 2>&1; \
+	done
+
+start_all_test_02_gql:
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 300 ./reports/statistics_test_300_REST.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 1 ./reports/statistics_test_01_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 300 ./reports/statistics_test_300_GQL.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 10 ./reports/statistics_test_10_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 400 ./reports/statistics_test_400_REST.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 20 ./reports/statistics_test_20_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 400 ./reports/statistics_test_400_GQL.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 50 ./reports/statistics_test_50_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 500 ./reports/statistics_test_500_REST.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 100 ./reports/statistics_test_100_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 500 ./reports/statistics_test_500_GQL.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 200 ./reports/statistics_test_200_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 600 ./reports/statistics_test_600_REST.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 300 ./reports/statistics_test_300_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 600 ./reports/statistics_test_600_GQL.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 400 ./reports/statistics_test_400_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 700 ./reports/statistics_test_700_REST.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 500 ./reports/statistics_test_500_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 700 ./reports/statistics_test_700_GQL.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 600 ./reports/statistics_test_600_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 800 ./reports/statistics_test_800_REST.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 700 ./reports/statistics_test_700_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 800 ./reports/statistics_test_800_GQL.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 800 ./reports/statistics_test_800_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 900 ./reports/statistics_test_900_REST.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 900 ./reports/statistics_test_900_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 900 ./reports/statistics_test_900_GQL.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 1000 ./reports/statistics_test_1000_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 1000 ./reports/statistics_test_1000_REST.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 1500 ./reports/statistics_test_1500_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 1000 ./reports/statistics_test_1000_GQL.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 2000 ./reports/statistics_test_2000_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 1500 ./reports/statistics_test_1500_REST.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 2500 ./reports/statistics_test_2500_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 1500 ./reports/statistics_test_1500_GQL.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 3000 ./reports/statistics_test_3000_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 2000 ./reports/statistics_test_2000_REST.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 3500 ./reports/statistics_test_3500_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 2000 ./reports/statistics_test_2000_GQL.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 4000 ./reports/statistics_test_4000_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 2500 ./reports/statistics_test_2500_REST.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 4500 ./reports/statistics_test_4500_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 2500 ./reports/statistics_test_2500_GQL.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 5000 ./reports/statistics_test_5000_GQL.csv > null
+.PHONY: start_all_dev_03_test
+
+start_all_test_02_new_order: ### Execute all REST API and GraphQL tests in test mode and save statistics
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 3000 ./reports/statistics_test_3000_REST.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 1 ./reports/statistics_test_01_REST.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 3000 ./reports/statistics_test_3000_GQL.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 1 ./reports/statistics_test_01_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 3500 ./reports/statistics_test_3500_REST.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 10 ./reports/statistics_test_10_REST.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 3500 ./reports/statistics_test_3500_GQL.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 10 ./reports/statistics_test_10_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 4000 ./reports/statistics_test_4000_REST.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 20 ./reports/statistics_test_20_REST.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 4000 ./reports/statistics_test_4000_GQL.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 20 ./reports/statistics_test_20_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 4500 ./reports/statistics_test_4500_REST.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 50 ./reports/statistics_test_50_REST.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 4500 ./reports/statistics_test_4500_GQL.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 50 ./reports/statistics_test_50_GQL.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 5000 ./reports/statistics_test_5000_REST.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 100 ./reports/statistics_test_100_REST.csv > null
 	sleep 3
-	node e2e_test/test_collection.js ./01_New_order_2_prod_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 5000 ./reports/statistics_test_5000_GQL.csv > null
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 100 ./reports/statistics_test_100_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 200 ./reports/statistics_test_200_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 200 ./reports/statistics_test_200_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 300 ./reports/statistics_test_300_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 300 ./reports/statistics_test_300_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 400 ./reports/statistics_test_400_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 400 ./reports/statistics_test_400_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 500 ./reports/statistics_test_500_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 500 ./reports/statistics_test_500_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 600 ./reports/statistics_test_600_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 600 ./reports/statistics_test_600_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 700 ./reports/statistics_test_700_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 700 ./reports/statistics_test_700_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 800 ./reports/statistics_test_800_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 800 ./reports/statistics_test_800_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 900 ./reports/statistics_test_900_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 900 ./reports/statistics_test_900_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 1000 ./reports/statistics_test_1000_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 1000 ./reports/statistics_test_1000_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 1500 ./reports/statistics_test_1500_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 1500 ./reports/statistics_test_1500_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 2000 ./reports/statistics_test_2000_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 2000 ./reports/statistics_test_2000_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 2500 ./reports/statistics_test_2500_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 2500 ./reports/statistics_test_2500_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 3000 ./reports/statistics_test_3000_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 3000 ./reports/statistics_test_3000_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 3500 ./reports/statistics_test_3500_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 3500 ./reports/statistics_test_3500_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 4000 ./reports/statistics_test_4000_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 4000 ./reports/statistics_test_4000_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 4500 ./reports/statistics_test_4500_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 4500 ./reports/statistics_test_4500_GQL.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_REST.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_REST_test.html 5000 ./reports/statistics_test_5000_REST.csv > null
+	sleep 3
+	node e2e_test/test_collection.js ./02_Create_user_GQL.postman_collection.json ./BachTest01.postman_environment.json ./reports/output_GQL_test.html 5000 ./reports/statistics_test_5000_GQL.csv > null
 .PHONY: start_all_dev_01_new_order
 
 start_all_cloud_01_new_order: # Execute all REST API and GraphQL tests in cloud mode and save statistics

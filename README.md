@@ -15,3 +15,12 @@ To work with project you need:
    `make run`
 5. To run all serveces separately (dev mode) type:
    `make run_dev`
+
+/// TODO: Describe ports localhost Apollo Server ///
+/// TODO: Add troubleshooting steps///
+/// TODO: Add results: REST API vs GraphQL///
+
+## Troubleshooting
+
+- Test (localhost:5000) GraphQL not working
+**Solution:** change `NODE_ENV` in *docker-compose.yml* from `production` to `development`.
